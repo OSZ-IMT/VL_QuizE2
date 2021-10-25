@@ -67,6 +67,9 @@ public class Controller {
 		model.setGewaehlterSchueler(glueckslos.get(rand.nextInt(klassengroesse)));
 	}
 
+	/**
+	 * Speichert alle Einstellungen ab
+	 */
 	private void speichernInDateien() {
 		fileParser.speichern(model);
 	}

@@ -63,26 +63,24 @@ public class XMLParser {
 			doc.getDocumentElement().normalize();
 
 			// Auslesen
-			// Ebene Klasse.xml
-			NodeList nList = doc.getChildNodes().item(0).getChildNodes();// Spielstand (0), Mitspieler (1)
 
 			// Spielstand laden
 			createSpielstand(doc, model);
 
 			// Ebene Schueler / Mitspieler
-			Element mitspieler = (Element) doc.getElementsByTagName("Mitspieler").item(0);
-			NodeList schuelerList = mitspieler.getElementsByTagName("Schueler");
+			NodeList schuelerList = doc.getElementsByTagName("Mitspieler").item(0).getChildNodes();
 
 			// Schueler auslesen
 			for (int i = 0; i < schuelerList.getLength(); i++) {
 				Element schueler = (Element) schuelerList.item(i);
 				String name = schueler.getAttribute("name");
+				String vorname = schueler.getAttribute("vorname");
 
 				int joker = Integer.parseInt(schueler.getElementsByTagName("Joker").item(0).getTextContent());
 				int blamiert = Integer.parseInt(schueler.getElementsByTagName("Blamiert").item(0).getTextContent());
 				int fragen = Integer.parseInt(schueler.getElementsByTagName("Fragen").item(0).getTextContent());
 
-				model.getAlleSchueler().add(new Schueler(name, joker, blamiert, fragen));
+				model.getAlleSchueler().add(new Schueler(name, vorname, joker, blamiert, fragen));
 			}
 
 		} catch (Exception e) {
@@ -102,12 +100,12 @@ public class XMLParser {
 		Element spielstand = (Element) doc.getElementsByTagName("Spielstand").item(0);
 
 		// Partei Lehrer einlesen
-		Element parteiLehrer = (Element) spielstand.getElementsByTagName("Partei").item(0);
+		Element parteiLehrer = (Element) spielstand.getFirstChild();
 		String lehrerName = parteiLehrer.getAttribute("name");
 		int lehrerPkt = Integer.parseInt(parteiLehrer.getTextContent());
 
 		// Partei Schueler einlesen
-		Element parteiSchueler = (Element) spielstand.getElementsByTagName("Partei").item(1);
+		Element parteiSchueler = (Element) parteiLehrer.getNextSibling();
 		String schuelerName = parteiSchueler.getAttribute("name");
 		int schuelerPkt = Integer.parseInt(parteiSchueler.getTextContent());
 
@@ -158,7 +156,9 @@ public class XMLParser {
 			// Schueler eintragen
 			for (Schueler schueler : model.getAlleSchueler()) {
 				Element schuelerXml = doc.createElement("Schueler");
+
 				schuelerXml.setAttribute("name", schueler.getName());
+				schuelerXml.setAttribute("vorname", schueler.getVorname());
 				mitspieler.appendChild(schuelerXml);
 
 				Element joker = doc.createElement("Joker");

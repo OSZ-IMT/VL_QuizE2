@@ -244,7 +244,7 @@ public class QuizGUI extends JFrame {
 		if (control.getGewaehlterSchueler() != null) {
 			control.nichtDa();
 			control.getZufallsSchueler();
-			this.lblSchueler.setText(control.getGewaehlterSchueler().getName());
+			this.lblSchueler.setText(control.getGewaehlterSchueler().getFullName());
 		}
 	}
 }
